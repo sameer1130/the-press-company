@@ -19,19 +19,10 @@ export default function App() {
   const [tweaksVisible, setTweaksVisible] = useState(false);
 
   useEffect(() => {
-    try {
-      if (sessionStorage.getItem('tpc-opened') === '1') {
-        setOpening(false);
-      }
-    } catch (e) { /* ignore */ }
-  }, []);
-
-  useEffect(() => {
     if (opening) {
       document.body.classList.add('locked');
     } else {
       document.body.classList.remove('locked');
-      try { sessionStorage.setItem('tpc-opened', '1'); } catch (e) { /* ignore */ }
     }
   }, [opening]);
 

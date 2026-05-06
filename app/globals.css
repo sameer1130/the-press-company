@@ -333,7 +333,7 @@ body.locked { overflow: hidden; height: 100vh; }
   display: grid;
   grid-template-columns: 1fr 1.2fr;
 }
-.sidemenu.open { transform: translateX(0); }
+.sidemenu.open { transform: translateX(0); z-index: 110; }
 .sidemenu-meta {
   padding: 120px 48px 48px;
   border-right: 1px solid rgba(242, 238, 229, 0.14);
@@ -371,21 +371,23 @@ body.locked { overflow: hidden; height: 100vh; }
   opacity: 0.4;
 }
 .sidemenu-nav {
-  padding: 120px 48px 48px;
+  padding: 100px 48px 40px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: 4px;
+  justify-content: flex-start;
+  gap: 2px;
+  overflow-y: auto;
+  min-height: 0;
 }
 .sidemenu-nav a {
   font-family: var(--font-display);
   font-weight: 900;
-  font-size: clamp(48px, 6vw, 88px);
+  font-size: clamp(34px, 4.5vw, 64px);
   line-height: 1;
   letter-spacing: -0.04em;
   color: var(--paper);
   text-decoration: none;
-  padding: 10px 0;
+  padding: 6px 0;
   display: flex;
   align-items: baseline;
   gap: 16px;
