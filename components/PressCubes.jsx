@@ -1,11 +1,11 @@
 'use client';
 
 const PRESS_DATA = [
-  { letter: 'P', word: 'Positioning', desc: 'The one true sentence your brand can defend in any room.', num: '01' },
-  { letter: 'R', word: 'Research', desc: 'Category mapping, audience immersion, competitive teardown.', num: '02' },
-  { letter: 'E', word: 'Expression', desc: 'Identity, verbal system, visual language — built around the strategy.', num: '03' },
-  { letter: 'S', word: 'Storytelling', desc: 'Narrative architecture, content, the arc of a launch.', num: '04' },
-  { letter: 'S', word: 'Scale', desc: 'Go-to-market, performance loops, the mechanics of growth.', num: '05' },
+  { letter: 'P', word: 'Position', desc: 'Build how the world sees you.', num: '01' },
+  { letter: 'R', word: 'Relevance', desc: 'Helping brands stay culturally and digitally relevant.', num: '02' },
+  { letter: 'E', word: 'Engagement', desc: 'How people interact and connect with your brand.', num: '03' },
+  { letter: 'S', word: 'Scale', desc: 'Turn visibility into business growth.', num: '04' },
+  { letter: 'S', word: 'Systems', desc: 'Build marketing that runs with consistency.', num: '05' },
 ];
 
 export default function PressCubes() {

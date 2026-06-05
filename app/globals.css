@@ -5,7 +5,9 @@
    Bold modernist · printing press motifs · editorial voice
    ============================================================ */
 
-:root {
+:root,
+html[data-theme="og"] {
+  /* ── OG — Ink & Signal (canonical fallback) ────────────── */
   --ink: #0B0B0B;
   --paper: #F2EEE5;
   --accent: #FF4A1C;
@@ -17,20 +19,55 @@
   --font-mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
 }
 
-/* Theme variants (switched via data-theme on <html>) */
-html[data-theme="midnight"] {
+/* ── Saved experimental themes — switched via data-theme on <html> ── */
+
+/* Risograph — riso pink-red on indigo-black, zine-print energy */
+html[data-theme="risograph"] {
+  --ink: #14133F;
+  --paper: #F0EBE0;
+  --accent: #FF5E5E;
+  --mid: #6E6CA0;
+  --rule: rgba(20, 19, 63, 0.16);
+}
+
+/* Letterhead — logo cream + logo brown, with true black for headlines.
+   Most editorial. The accent is the logo brown itself. */
+html[data-theme="letterhead"] {
   --ink: #0B0B0B;
-  --paper: #f4efe5;
-  --accent: #4e1e0b;
+  --paper: #F4EFE5;
+  --accent: #4E1E0B;
   --mid: #8A8680;
   --rule: rgba(11, 11, 11, 0.14);
 }
-html[data-theme="press"] {
-  --ink: #F2EEE5;
-  --paper: #C8351A;
-  --accent: #0B0B0B;
-  --mid: rgba(242, 238, 229, 0.6);
-  --rule: rgba(242, 238, 229, 0.25);
+
+/* Stamp — pure logo palette: warm brown ink on logo cream + brown accent.
+   The whole page reads as one warm material — like an embossed letterhead. */
+html[data-theme="stamp"] {
+  --ink: #2A1308;
+  --paper: #F4EFE5;
+  --accent: #6B2A12;
+  --mid: #8A7B6A;
+  --rule: rgba(42, 19, 8, 0.14);
+}
+
+/* Foil — inverted: logo brown becomes the page, logo cream becomes the ink.
+   Adds a warm cream-highlight accent. Reads like leather binding / brand book. */
+html[data-theme="foil"] {
+  --ink: #F4EFE5;
+  --paper: #4E1E0B;
+  --accent: #E8C792;
+  --mid: rgba(244, 239, 229, 0.55);
+  --rule: rgba(244, 239, 229, 0.18);
+}
+
+/* Regalia — deep aubergine purple page + antique gold accent + cream text.
+   Velvet brand-book / members'-club register. */
+html[data-theme="regalia"] {
+  --ink: #F4EFE5;
+  --paper: #2A1A4A;
+  --accent: #D4A537;
+  --mid: rgba(244, 239, 229, 0.55);
+  --rule: rgba(244, 239, 229, 0.18);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -229,22 +266,42 @@ body.locked { overflow: hidden; height: 100vh; }
   margin-top: 2px;
   opacity: 0.7;
 }
+.logo .lockup-oneline {
+  flex-direction: row;
+  align-items: baseline;
+  gap: 8px;
+}
+.logo .lockup-oneline .press-word {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 18px;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.logo .lockup-oneline .press-sep {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  opacity: 0.45;
+  line-height: 1;
+}
+.logo .lockup-oneline .press-est {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  opacity: 0.7;
+  line-height: 1;
+}
 .logo-mark {
-  width: 22px; height: 22px;
+  width: 48px; height: 48px;
   position: relative;
   flex-shrink: 0;
+  background-image: url('/logo.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
 }
-.logo-mark::before, .logo-mark::after {
-  content: ''; position: absolute;
-  background: var(--paper);
-}
-.logo-mark::before { inset: 0 10px; }
-.logo-mark::after  { inset: 10px 0; }
-.logo-mark-circle {
-  position: absolute; inset: 2px;
-  border: 1.5px solid var(--paper);
-  border-radius: 50%;
-}
+.logo-mark-circle { display: none; }
 
 .nav-cube {
   position: relative;
@@ -1001,12 +1058,44 @@ body.locked { overflow: hidden; height: 100vh; }
   width: 520px;
   aspect-ratio: 4 / 3;
   flex-shrink: 0;
+  background: transparent;
+  color: var(--paper);
+  cursor: pointer;
+  perspective: 1400px;
+}
+
+/* The 3D rotator. Hover the card → flips 180°.
+   transform-style: preserve-3d keeps both faces in 3D space so the
+   backface-visibility on each face actually does its job. */
+.proj-flipper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.75s cubic-bezier(0.7, 0, 0.3, 1);
+}
+.proj-card:hover .proj-flipper,
+.proj-card:focus-within .proj-flipper {
+  transform: rotateY(180deg);
+}
+
+.proj-face {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
   background: var(--ink);
   color: var(--paper);
-  overflow: hidden;
-  cursor: pointer;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
-.proj-card:nth-child(even) { background: var(--accent); color: var(--ink); }
+.proj-card:nth-child(even) .proj-face {
+  background: var(--accent);
+  color: var(--ink);
+}
+.proj-face-back {
+  transform: rotateY(180deg);
+}
+
 .proj-card-inner {
   position: absolute;
   inset: 24px;
@@ -1049,6 +1138,80 @@ body.locked { overflow: hidden; height: 100vh; }
   pointer-events: none;
 }
 
+/* ── Back face — essay framing ───────────────────────────────── */
+.proj-back-inner {
+  position: absolute;
+  inset: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.proj-back-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+.proj-back-block { display: flex; flex-direction: column; gap: 6px; }
+.proj-back-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  opacity: 0.55;
+}
+.proj-back-text {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 19px;
+  line-height: 1.35;
+  letter-spacing: -0.012em;
+}
+.proj-back-mono {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  line-height: 1.45;
+  opacity: 0.85;
+}
+.proj-back-list {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 16px;
+  row-gap: 6px;
+}
+.proj-back-list li {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.3;
+  letter-spacing: -0.005em;
+  padding-left: 14px;
+  position: relative;
+}
+.proj-back-list li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: 12px;
+  opacity: 0.55;
+}
+.proj-back-note {
+  margin-top: 12px;
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-size: 16px;
+  line-height: 1.35;
+  opacity: 0.7;
+}
+
 /* Client logo strip */
 .logos {
   background: var(--paper);
@@ -1068,29 +1231,65 @@ body.locked { overflow: hidden; height: 100vh; }
   opacity: 0.7;
 }
 .logos-label .dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; }
-.logos-grid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 0;
-  border-top: 1px solid var(--rule);
-  border-left: 1px solid var(--rule);
+/* ── Brands-in-orbit marquee ───────────────────────────────────
+   4 rows of brand chips. Direction alternates per row. Translation
+   is JS-driven from window.scrollY (see BrandsMarquee in Projects.jsx)
+   so motion happens ONLY while the page is scrolling — not on its own.
+   Each row's track is duplicated 2× so wrapping is seamless. */
+.logos-marquee {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  position: relative;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    black 100px,
+    black calc(100% - 100px),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    black 100px,
+    black calc(100% - 100px),
+    transparent 100%
+  );
 }
-@media (max-width: 800px) { .logos-grid { grid-template-columns: repeat(3, 1fr); } }
+.logos-row {
+  overflow: hidden;
+  width: 100%;
+}
+.logos-track {
+  display: flex;
+  gap: 26px;
+  width: max-content;
+  will-change: transform;
+}
+
 .logo-cell {
-  aspect-ratio: 2 / 1;
-  border-right: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule);
-  display: grid;
-  place-items: center;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 44px;
+  min-width: 230px;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 18px;
   font-family: var(--font-display);
-  font-weight: 900;
+  font-weight: 600;
   font-size: 22px;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.014em;
   color: var(--ink);
-  opacity: 0.85;
-  transition: background 0.3s, color 0.3s;
+  white-space: nowrap;
+  transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
 }
-.logo-cell:hover { background: var(--ink); color: var(--paper); }
+.logo-cell:hover {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
 
 /* ---------------------- PEOPLE -------------------------------- */
 .people {
@@ -1100,13 +1299,18 @@ body.locked { overflow: hidden; height: 100vh; }
   position: relative;
   overflow: hidden;
 }
-.people-grid {
+
+/* Lead + stats sit above the team grid, narrative layer first. */
+.people-intro {
   display: grid;
   grid-template-columns: 1.4fr 1fr;
   gap: 60px;
   align-items: flex-start;
+  margin-top: 60px;
+  margin-bottom: 90px;
 }
-@media (max-width: 900px) { .people-grid { grid-template-columns: 1fr; } }
+@media (max-width: 900px) { .people-intro { grid-template-columns: 1fr; } }
+
 .people-lead {
   font-family: 'Instrument Serif', 'Times New Roman', serif;
   font-size: clamp(22px, 2.2vw, 32px);
@@ -1115,54 +1319,106 @@ body.locked { overflow: hidden; height: 100vh; }
 }
 .people-lead em { color: var(--accent); font-style: italic; }
 
-.polaroid-stack {
-  position: relative;
-  min-height: 440px;
+.people-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  max-width: 520px;
 }
-.polaroid {
-  position: absolute;
-  width: 240px;
-  background: var(--paper);
-  padding: 14px 14px 48px;
-  box-shadow: 0 18px 40px rgba(0,0,0,0.18);
-  transition: transform 0.35s cubic-bezier(0.85, 0, 0.15, 1);
-  cursor: grab;
-}
-.polaroid:hover { transform: translate(var(--tx, 0), var(--ty, 0)) rotate(var(--r, 0)) scale(1.04); z-index: 10; }
-.polaroid-frame {
-  aspect-ratio: 1 / 1;
-  background:
-    linear-gradient(135deg, rgba(11,11,11,0.08), rgba(255,74,28,0.06)),
-    repeating-linear-gradient(45deg, rgba(11,11,11,0.04) 0 2px, transparent 2px 8px);
-  position: relative;
-}
-.polaroid-frame .ph-label {
-  position: absolute;
-  bottom: 8px; left: 8px;
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  opacity: 0.5;
-}
-.polaroid-caption {
-  position: absolute;
-  bottom: 12px; left: 14px; right: 14px;
+.people-stat { border-top: 1px solid var(--rule); padding-top: 16px; }
+.people-stat-num {
   font-family: var(--font-display);
   font-weight: 900;
-  font-size: 14px;
-  letter-spacing: -0.01em;
-  display: flex;
-  justify-content: space-between;
+  font-size: 44px;
+  letter-spacing: -0.03em;
+  line-height: 1;
 }
-.polaroid-caption .role {
+.people-stat-label {
   font-family: var(--font-mono);
-  font-size: 9px;
-  font-weight: 400;
-  letter-spacing: 0.14em;
+  font-size: 10px;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  opacity: 0.5;
-  align-self: flex-end;
+  opacity: 0.6;
+  margin-top: 8px;
+  line-height: 1.4;
+}
+
+/* ── Team avatar grid — 6 cols × 2 rows on desktop, matching the
+   reference image. Each card is just an avatar + name + role. */
+.people-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 56px 32px;
+  max-width: 1240px;
+  margin: 0 auto;
+}
+@media (max-width: 1100px) { .people-grid { grid-template-columns: repeat(4, 1fr); } }
+@media (max-width: 720px)  { .people-grid { grid-template-columns: repeat(3, 1fr); gap: 40px 20px; } }
+@media (max-width: 460px)  { .people-grid { grid-template-columns: repeat(2, 1fr); } }
+
+.person-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+}
+
+.person-avatar {
+  width: 124px;
+  height: 124px;
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+  background:
+    linear-gradient(135deg, rgba(11,11,11,0.06), rgba(11,11,11,0.02)),
+    var(--paper);
+  border: 1px solid var(--rule);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  transition: transform 0.4s cubic-bezier(0.85, 0, 0.15, 1);
+}
+.person-card:hover .person-avatar { transform: scale(1.04); }
+
+.person-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Greyscale unifies disparate photo sources into one editorial look,
+     just like the B&W reference image. */
+  filter: grayscale(1) contrast(1.02);
+  transition: filter 0.4s ease;
+}
+.person-card:hover .person-avatar img {
+  filter: grayscale(0.2) contrast(1.05);
+}
+
+/* Initial fallback if no photo URL provided. */
+.person-avatar span {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 34px;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  opacity: 0.55;
+}
+
+.person-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+.person-role {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.55;
+  line-height: 1.45;
+  max-width: 140px;
 }
 
 /* ---------------------- FINAL CTA ----------------------------- */
@@ -1258,6 +1514,15 @@ body.locked { overflow: hidden; height: 100vh; }
   font-size: clamp(40px, 6vw, 80px);
   line-height: 0.9;
   letter-spacing: -0.04em;
+}
+.footer-brand-mark {
+  width: clamp(150px, 18vw, 240px);
+  height: clamp(150px, 18vw, 240px);
+  background-image: url('/logo.png');
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-size: contain;
+  margin-bottom: 22px;
 }
 .footer-brand em {
   font-style: normal;

@@ -5,6 +5,20 @@ import { useEffect, useRef } from 'react';
 const PARTICLE_COUNT = 200;
 const HOVER_RADIUS = 120;
 
+// Per-face lighting overlay so a single-colored cube still reads as a 3D
+// solid (top brightest, bottom darkest, sides slightly darkened).
+// Each entry is an RGBA layer composited on top of the base color.
+const FACE_TINT = {
+  front:  'rgba(0,0,0,0.00)',
+  back:   'rgba(0,0,0,0.22)',
+  right:  'rgba(0,0,0,0.10)',
+  left:   'rgba(0,0,0,0.10)',
+  top:    'rgba(255,255,255,0.12)',
+  bottom: 'rgba(0,0,0,0.28)',
+};
+
+const faceBg = (color, face) => `linear-gradient(${FACE_TINT[face]}, ${FACE_TINT[face]}), ${color}`;
+
 export default function InteractiveCubes() {
   const containerRef = useRef(null);
   const mouseRef = useRef({ x: -1000, y: -1000 });
@@ -14,6 +28,7 @@ export default function InteractiveCubes() {
   const rafRef = useRef(null);
   const starsCanvasRef = useRef(null);
 
+  // Starfield backdrop — unchanged.
   useEffect(() => {
     const canvas = starsCanvasRef.current;
     if (!canvas) return;
@@ -24,7 +39,6 @@ export default function InteractiveCubes() {
       const ctx = canvas.getContext('2d');
       ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
       ctx.clearRect(0, 0, rect.width, rect.height);
-
       for (let i = 0; i < 500; i++) {
         const x = Math.random() * rect.width;
         const y = Math.random() * rect.height;
@@ -34,7 +48,6 @@ export default function InteractiveCubes() {
         ctx.fillStyle = `rgba(255, 255, 255, ${0.3 + Math.random() * 0.7})`;
         ctx.fill();
       }
-
       for (let i = 0; i < 10; i++) {
         const x = Math.random() * rect.width;
         const y = Math.random() * rect.height;
@@ -51,7 +64,6 @@ export default function InteractiveCubes() {
         ctx.fillStyle = grad;
         ctx.fill();
       }
-
       for (let i = 0; i < 15; i++) {
         const x = Math.random() * rect.width;
         const y = Math.random() * rect.height;
@@ -74,12 +86,12 @@ export default function InteractiveCubes() {
     return () => window.removeEventListener('resize', resize);
   }, []);
 
+  // Seed particle positions/physics state.
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
     const w = container.offsetWidth;
     const h = container.offsetHeight;
-
     cubesRef.current = Array.from({ length: PARTICLE_COUNT }, () => {
       const size = 4 + Math.random() * 12;
       return {
@@ -93,24 +105,19 @@ export default function InteractiveCubes() {
         rx: Math.random() * 360,
         ry: Math.random() * 360,
         spinSpeed: 0.3 + Math.random() * 0.8,
-        type: Math.random(),
       };
     });
     cubesRef.current.forEach((c) => { c.homeX = c.x; c.homeY = c.y; });
   }, []);
 
+  // Mouse tracking — unchanged.
   useEffect(() => {
     const onMove = (e) => {
       if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
-      mouseRef.current = {
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
-      };
+      mouseRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
     };
-    const onLeave = () => {
-      mouseRef.current = { x: -1000, y: -1000 };
-    };
+    const onLeave = () => { mouseRef.current = { x: -1000, y: -1000 }; };
     const el = containerRef.current;
     if (el) {
       el.addEventListener('mousemove', onMove);
@@ -124,10 +131,10 @@ export default function InteractiveCubes() {
     };
   }, []);
 
+  // Animation loop — unchanged physics.
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
-
     const particleEls = container.querySelectorAll('.ic-particle');
     const centralEl = centralRef.current;
 
@@ -188,17 +195,22 @@ export default function InteractiveCubes() {
   const cubeSize = 100;
   const ch = cubeSize / 2;
 
-  const centralFaceStyle = (bg) => ({
+  // Central cube — single color (accent) with face-tint overlays for
+  // light/shade depth. Text colour stays var(--ink) so all faces feel
+  // like one carved block.
+  const centralFace = (face, extra = {}) => ({
     position: 'absolute',
     width: cubeSize,
     height: cubeSize,
-    background: bg,
+    background: faceBg('var(--accent)', face),
     display: 'grid',
     placeItems: 'center',
-    backfaceVisibility: 'visible',
+    backfaceVisibility: 'hidden',
     fontFamily: 'var(--font-display)',
     fontWeight: 900,
     letterSpacing: '-0.03em',
+    color: 'var(--ink)',
+    ...extra,
   });
 
   return (
@@ -237,11 +249,20 @@ export default function InteractiveCubes() {
           cursor: 'default',
         }}
       >
+        {/* Particle cubes — each cube is a single colour on all 6 faces with
+            light/shade tinting. No multi-colour faces, so rotations always
+            read as a solid spinning block. */}
         {Array.from({ length: PARTICLE_COUNT }, (_, i) => {
           const size = 4 + (i * 7 % 12);
-          const isAccent = i % 5 === 0;
-          const isPaper = i % 5 === 1;
-          const bg = isAccent ? 'var(--accent)' : isPaper ? 'rgba(242,238,229,0.9)' : 'rgba(242,238,229,0.15)';
+          // Deterministic colour distribution across the cohort.
+          // 60% accent, 25% bright paper, 15% dim paper. Each individual
+          // particle is a single colour across all 6 of its faces.
+          const roll = i % 20;
+          const color =
+            roll < 12 ? 'var(--accent)' :
+            roll < 17 ? 'rgba(242,238,229,0.85)' :
+                        'rgba(242,238,229,0.22)';
+          const half = size / 2;
           return (
             <div
               key={i}
@@ -255,35 +276,20 @@ export default function InteractiveCubes() {
                 willChange: 'transform',
               }}
             >
-              <div style={{
-                position: 'absolute', inset: 0,
-                background: bg,
-                transform: `translateZ(${size / 2}px)`,
-                backfaceVisibility: 'visible',
-              }} />
-              <div style={{
-                position: 'absolute', inset: 0,
-                background: isAccent ? 'var(--ink)' : 'var(--accent)',
-                transform: `rotateY(90deg) translateZ(${size / 2}px)`,
-                backfaceVisibility: 'visible',
-              }} />
-              <div style={{
-                position: 'absolute', inset: 0,
-                background: isPaper ? 'var(--accent)' : 'rgba(242,238,229,0.2)',
-                transform: `rotateY(180deg) translateZ(${size / 2}px)`,
-                backfaceVisibility: 'visible',
-              }} />
-              <div style={{
-                position: 'absolute', inset: 0,
-                background: isAccent ? 'rgba(242,238,229,0.8)' : 'var(--ink)',
-                border: '1px solid rgba(242,238,229,0.1)',
-                transform: `rotateY(-90deg) translateZ(${size / 2}px)`,
-                backfaceVisibility: 'visible',
-              }} />
+              {/* All 6 faces present, all same colour, with face-tint overlays
+                  so light/shade gives the cube depth without breaking unity. */}
+              <div style={{ position: 'absolute', inset: 0, background: faceBg(color, 'front'),  transform: `translateZ(${half}px)`,                     backfaceVisibility: 'hidden' }} />
+              <div style={{ position: 'absolute', inset: 0, background: faceBg(color, 'back'),   transform: `rotateY(180deg) translateZ(${half}px)`,    backfaceVisibility: 'hidden' }} />
+              <div style={{ position: 'absolute', inset: 0, background: faceBg(color, 'right'),  transform: `rotateY(90deg) translateZ(${half}px)`,     backfaceVisibility: 'hidden' }} />
+              <div style={{ position: 'absolute', inset: 0, background: faceBg(color, 'left'),   transform: `rotateY(-90deg) translateZ(${half}px)`,    backfaceVisibility: 'hidden' }} />
+              <div style={{ position: 'absolute', inset: 0, background: faceBg(color, 'top'),    transform: `rotateX(90deg) translateZ(${half}px)`,     backfaceVisibility: 'hidden' }} />
+              <div style={{ position: 'absolute', inset: 0, background: faceBg(color, 'bottom'), transform: `rotateX(-90deg) translateZ(${half}px)`,    backfaceVisibility: 'hidden' }} />
             </div>
           );
         })}
 
+        {/* Central cube — single-colour faces, same accent bg on all six,
+            text in ink. Faces still distinguishable via light/shade tint. */}
         <div
           ref={centralRef}
           style={{
@@ -307,24 +313,12 @@ export default function InteractiveCubes() {
               transformStyle: 'preserve-3d',
             }}
           >
-            <div style={{ ...centralFaceStyle('var(--accent)'), color: 'var(--ink)', transform: `translateZ(${ch}px)`, fontSize: 24 }}>
-              {'{ P }'}
-            </div>
-            <div style={{ ...centralFaceStyle('var(--ink)'), color: 'var(--paper)', border: '1px solid rgba(242,238,229,0.2)', transform: `rotateY(180deg) translateZ(${ch}px)`, fontSize: 14, fontFamily: 'var(--font-mono)', fontWeight: 500, letterSpacing: '0.18em' }}>
-              EST. 2024
-            </div>
-            <div style={{ ...centralFaceStyle('var(--paper)'), color: 'var(--ink)', transform: `rotateY(90deg) translateZ(${ch}px)`, fontSize: 18 }}>
-              PRESS
-            </div>
-            <div style={{ ...centralFaceStyle('var(--ink)'), color: 'var(--accent)', border: '1px solid rgba(242,238,229,0.15)', transform: `rotateY(-90deg) translateZ(${ch}px)`, fontSize: 18 }}>
-              CO.
-            </div>
-            <div style={{ ...centralFaceStyle('var(--accent)'), color: 'var(--ink)', transform: `rotateX(90deg) translateZ(${ch}px)`, fontSize: 28 }}>
-              P
-            </div>
-            <div style={{ ...centralFaceStyle('var(--paper)'), color: 'var(--ink)', transform: `rotateX(-90deg) translateZ(${ch}px)`, fontSize: 10, fontFamily: 'var(--font-mono)', letterSpacing: '0.2em', fontWeight: 400 }}>
-              BOMBAY
-            </div>
+            <div style={{ ...centralFace('front',  { transform: `translateZ(${ch}px)`,                  fontSize: 24 }) }}>{'{ P }'}</div>
+            <div style={{ ...centralFace('back',   { transform: `rotateY(180deg) translateZ(${ch}px)`, fontSize: 12, fontFamily: 'var(--font-mono)', fontWeight: 500, letterSpacing: '0.18em' }) }}>EST. 2024</div>
+            <div style={{ ...centralFace('right',  { transform: `rotateY(90deg) translateZ(${ch}px)`,  fontSize: 18 }) }}>PRESS</div>
+            <div style={{ ...centralFace('left',   { transform: `rotateY(-90deg) translateZ(${ch}px)`, fontSize: 18 }) }}>CO.</div>
+            <div style={{ ...centralFace('top',    { transform: `rotateX(90deg) translateZ(${ch}px)`,  fontSize: 28 }) }}>P</div>
+            <div style={{ ...centralFace('bottom', { transform: `rotateX(-90deg) translateZ(${ch}px)`, fontSize: 10, fontFamily: 'var(--font-mono)', letterSpacing: '0.2em', fontWeight: 400 }) }}>BOMBAY</div>
           </div>
         </div>
       </div>

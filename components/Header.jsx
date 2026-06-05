@@ -23,9 +23,10 @@ export function Header({ onOpenMenu, menuOpen }) {
         <div className="logo-mark">
           <div className="logo-mark-circle" />
         </div>
-        <div className="lockup">
-          <div>{'{ PRESS }'}</div>
-          <div className="sub">THE PRESS CO · EST. 2024</div>
+        <div className="lockup lockup-oneline">
+          <span className="press-word">PRESS</span>
+          <span className="press-sep">·</span>
+          <span className="press-est">EST. 2024</span>
         </div>
       </a>
 
@@ -68,8 +69,7 @@ export function SideMenu({ open, onClose }) {
     { n: '02', label: 'About', href: '#who' },
     { n: '03', label: 'Expertise', href: '#press' },
     { n: '04', label: 'Case Studies', href: '#projects' },
-    { n: '05', label: 'Our People', href: '#people' },
-    { n: '06', label: 'Enquire', href: '#contact' },
+    { n: '05', label: 'Enquire', href: '#contact' },
   ];
   return (
     <nav className={`sidemenu ${open ? 'open' : ''}`} aria-hidden={!open}>

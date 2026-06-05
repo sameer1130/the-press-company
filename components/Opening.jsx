@@ -2,12 +2,18 @@
 
 import { useEffect, useState } from 'react';
 
+// Marketing-themed imagery for the cycling P:
+//   1. coffee machine pouring espresso
+//   2. team around a meeting/marketing table
+//   3. brainstorm with sticky notes
+//   4. discussion at a whiteboard / strategy session
+//   5. coffee + notebook workspace
 const IMAGES = [
-  'https://picsum.photos/seed/tpc-press-1/1400/1800',
-  'https://picsum.photos/seed/tpc-press-2/1400/1800',
-  'https://picsum.photos/seed/tpc-press-3/1400/1800',
-  'https://picsum.photos/seed/tpc-press-4/1400/1800',
-  'https://picsum.photos/seed/tpc-press-5/1400/1800',
+  'https://images.unsplash.com/photo-1497515114629-f71d768fd07c?w=1400&h=1800&fit=crop&q=80&auto=format',
+  'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1400&h=1800&fit=crop&q=80&auto=format',
+  'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=1400&h=1800&fit=crop&q=80&auto=format',
+  'https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1400&h=1800&fit=crop&q=80&auto=format',
+  'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1400&h=1800&fit=crop&q=80&auto=format',
 ];
 
 const GRADIENTS = [

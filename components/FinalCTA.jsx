@@ -142,8 +142,9 @@ export default function FinalCTA() {
       <footer className="footer">
         <div className="footer-top">
           <div>
+            <div className="footer-brand-mark" aria-hidden="true" />
             <div className="footer-brand">
-              {'{ Press }'}<br />
+              Press<br />
               <em>Company.</em>
             </div>
             <div style={{ marginTop: 30, fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', opacity: 0.5 }}>
@@ -162,14 +163,13 @@ export default function FinalCTA() {
             <h5>Elsewhere</h5>
             <a href="#">LinkedIn</a>
             <a href="#">Instagram</a>
-            <a href="#">Medium</a>
-            <a href="#">Are.na</a>
+            <a href="mailto:hello@thepress.co">Email</a>
+            <a href="#">Downloadables</a>
           </div>
           <div className="footer-col">
             <h5>Legal</h5>
             <a href="#">Privacy</a>
             <a href="#">Terms</a>
-            <a href="#">Careers</a>
             <a href="#">Media kit</a>
           </div>
         </div>

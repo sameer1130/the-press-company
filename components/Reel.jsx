@@ -78,7 +78,7 @@ export default function Reel() {
               fontSize: 'clamp(32px, 4vw, 64px)',
               lineHeight: 0.9, letterSpacing: '-0.04em',
             }}>
-              Two minutes<br />of <span style={{ fontFamily: 'Instrument Serif,serif', fontWeight: 400, fontStyle: 'italic' }}>proof.</span>
+              60 sec<br />of <span style={{ fontFamily: 'Instrument Serif,serif', fontWeight: 400, fontStyle: 'italic' }}>proof.</span>
             </div>
           </div>
 
@@ -174,7 +174,7 @@ export default function Reel() {
                   transform: `rotateX(-90deg) translateZ(${half}px)`,
                   borderRadius: 6,
                 }}>
-                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase', opacity: 0.6 }}>02:14</div>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase', opacity: 0.6 }}>00:60</div>
                 </div>
               </div>
             </div>
@@ -216,7 +216,7 @@ export default function Reel() {
                 letterSpacing: '0.2em',
                 opacity: contentP * 0.7,
               }}>
-                02:14:08:22
+                00:01:00:00
               </div>
 
               {/* Bottom row of meta */}

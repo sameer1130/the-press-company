@@ -19,8 +19,8 @@ export default function WhoWeAre() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const line1 = "We're an AI-native design and technology firm.";
-  const line2 = "We help enterprises redesign their systems, experiences and operating models to create durable competitive advantage.";
+  const line1 = "We build brands that don't rely on noise to grow.";
+  const line2 = "Most brands don't struggle because they lack marketing — they struggle because there's no clarity behind it. We work with founders to align positioning, communication and growth systems into one cohesive direction, so the brand performs, scales and sustains momentum without relying on noise.";
   const allWords = (line1 + ' ' + line2).split(' ');
   const line1Count = line1.split(' ').length;
 
@@ -71,7 +71,7 @@ export default function WhoWeAre() {
                 opacity: 0.04,
                 transform: `translateX(${(row % 2 === 0 ? -bgOffset : bgOffset) - 200}px)`,
               }}>
-                THE PRESS COMPANY · THE PRESS COMPANY · THE PRESS COMPANY · THE PRESS COMPANY
+                CLARITY BUILDS BRANDS · CLARITY BUILDS BRANDS · CLARITY BUILDS BRANDS · CLARITY BUILDS BRANDS
               </div>
             ))}
           </div>
@@ -126,13 +126,13 @@ export default function WhoWeAre() {
             }} />
 
             <div style={{
-              fontFamily: 'var(--font-display)',
-              fontWeight: 900,
-              fontSize: 'clamp(28px, 4vw, 60px)',
-              lineHeight: 1.1,
-              letterSpacing: '-0.03em',
+              fontFamily: 'Instrument Serif, serif',
+              fontWeight: 400,
+              fontSize: 'clamp(18px, 2vw, 26px)',
+              lineHeight: 1.45,
+              letterSpacing: '-0.005em',
               color: 'var(--ink)',
-              maxWidth: 820,
+              maxWidth: 780,
             }}>
               {line2.split(' ').map((w, i) => (
                 <span key={i} style={getWordStyle(i + line1Count, allWords.length)}>{w}</span>
@@ -149,8 +149,8 @@ export default function WhoWeAre() {
             }}>
               {[
                 ['Strategy', 'Positioning that holds up in any room'],
-                ['Design', 'Identity systems built around the strategy'],
-                ['Technology', 'Execution at the speed of the market'],
+                ['Plan', 'A roadmap aligned to how the brand will compete'],
+                ['Execute', 'Systems shipped at the speed of the market'],
               ].map(([title, desc], i) => (
                 <div key={i} style={{
                   borderTop: '1px solid var(--rule)',

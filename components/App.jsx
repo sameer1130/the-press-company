@@ -37,10 +37,11 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    let t = 'default';
+    const VALID = ['og', 'letterhead', 'stamp', 'foil', 'risograph', 'regalia'];
+    let t = 'og';
     try {
       const saved = localStorage.getItem('tpc-theme');
-      if (saved) t = saved;
+      if (saved && VALID.includes(saved)) t = saved;
     } catch (e) { /* ignore */ }
     document.documentElement.setAttribute('data-theme', t);
   }, []);

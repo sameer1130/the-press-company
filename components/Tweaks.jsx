@@ -2,26 +2,38 @@
 
 import { useEffect, useState } from 'react';
 
+// Saved palettes. OG is the canonical fallback.
+// Letterhead / Stamp / Foil are derived from the actual logo colors
+// (#F4EFE5 cream + #4E1E0B brown).
 const THEMES = [
-  { id: 'default', name: 'Ink / Paper', swatches: ['#0B0B0B', '#F2EEE5', '#FF4A1C'] },
-  { id: 'midnight', name: 'Espresso', swatches: ['#0B0B0B', '#f4efe5', '#4e1e0b'] },
-  { id: 'press', name: 'Press Red', swatches: ['#F2EEE5', '#C8351A', '#0B0B0B'] },
+  { id: 'og',         name: 'OG — Ink & Signal', swatches: ['#0B0B0B', '#F2EEE5', '#FF4A1C'] },
+  { id: 'letterhead', name: 'Letterhead',        swatches: ['#0B0B0B', '#F4EFE5', '#4E1E0B'] },
+  { id: 'stamp',      name: 'Stamp',             swatches: ['#2A1308', '#F4EFE5', '#6B2A12'] },
+  { id: 'foil',       name: 'Foil',              swatches: ['#F4EFE5', '#4E1E0B', '#E8C792'] },
+  { id: 'risograph',  name: 'Risograph',         swatches: ['#14133F', '#F0EBE0', '#FF5E5E'] },
+  { id: 'regalia',    name: 'Regalia',           swatches: ['#F4EFE5', '#2A1A4A', '#D4A537'] },
 ];
 
 export default function Tweaks({ visible }) {
-  const [theme, setTheme] = useState('default');
+  const [theme, setTheme] = useState('og');
 
+  // On mount, hydrate from whatever App.jsx already applied to <html>,
+  // falling back to localStorage, falling back to OG.
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    try { localStorage.setItem('tpc-theme', theme); } catch (e) { /* ignore */ }
-  }, [theme]);
-
-  useEffect(() => {
+    let next = document.documentElement.getAttribute('data-theme') || 'og';
     try {
       const saved = localStorage.getItem('tpc-theme');
-      if (saved && THEMES.find((t) => t.id === saved)) setTheme(saved);
+      if (saved) next = saved;
     } catch (e) { /* ignore */ }
+    if (!THEMES.find((t) => t.id === next)) next = 'og';
+    setTheme(next);
   }, []);
+
+  const pick = (id) => {
+    setTheme(id);
+    document.documentElement.setAttribute('data-theme', id);
+    try { localStorage.setItem('tpc-theme', id); } catch (e) { /* ignore */ }
+  };
 
   if (!visible) return null;
 
@@ -35,7 +47,7 @@ export default function Tweaks({ visible }) {
             <button
               key={t.id}
               className={`theme-chip ${theme === t.id ? 'active' : ''}`}
-              onClick={() => setTheme(t.id)}
+              onClick={() => pick(t.id)}
             >
               <div className="swatches">
                 {t.swatches.map((s, i) => (
