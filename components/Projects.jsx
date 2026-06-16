@@ -299,16 +299,14 @@ export default function Projects() {
   );
 }
 
-/* ── Brands in orbit — 4 rows, scroll-driven ──────────────────
-   Rows alternate direction (row 0,2 = L→R; row 1,3 = R→L). The
-   translation is driven by window.scrollY (not by a CSS keyframe),
-   so the marquee only moves while the user is scrolling the page.
-   The track is duplicated 2× so wrapping at half-width is seamless.
-   A small rAF easer smooths the scroll signal so motion feels physical
-   rather than discrete-jumpy. */
+/* ── Brands in orbit — 4 rows, self-running marquee ───────────
+   Rows alternate direction (rows 1,3 = L→R; rows 2,4 = R→L) and scroll
+   continuously on their own via a CSS keyframe animation — independent
+   of page scroll. Each track is duplicated 2× so the −50% loop is
+   seamless. Direction, speed, and hover-pause all live in CSS
+   (.logos-track in globals.css). */
 function BrandsMarquee({ logos }) {
   const ROW_COUNT = 4;
-  const SCROLL_SPEED = 0.7; // px-of-track per px-of-scroll. Higher = more visible motion.
 
   // Split brands into ROW_COUNT roughly-equal slices.
   const rows = (() => {
@@ -324,82 +322,6 @@ function BrandsMarquee({ logos }) {
     return out;
   })();
 
-  const trackRefs = useRef([]);
-  const [halfWidths, setHalfWidths] = useState(() => Array(ROW_COUNT).fill(1500));
-  const [smoothedScroll, setSmoothedScroll] = useState(0);
-  const targetScroll = useRef(0);
-
-  // Measure each track's natural width (sum of chips + gaps) ÷ 2 — that's
-  // one set's width, which is also the wrap distance.
-  useEffect(() => {
-    const measure = () => {
-      const next = trackRefs.current.map((el) =>
-        el && el.scrollWidth > 0 ? el.scrollWidth / 2 : 1500
-      );
-      setHalfWidths(next);
-    };
-    measure();
-    window.addEventListener('resize', measure);
-    // Re-measure after fonts settle (chips can change width when
-    // Inter Tight finishes loading).
-    const t1 = setTimeout(measure, 250);
-    const t2 = setTimeout(measure, 1200);
-    return () => {
-      window.removeEventListener('resize', measure);
-      clearTimeout(t1);
-      clearTimeout(t2);
-    };
-  }, [logos]);
-
-  // Always-on rAF loop. Scroll listener writes to a ref; rAF reads it and
-  // lerps state toward target. No scheduling tricks, no stalled flags —
-  // motion can never get "stuck" because the loop never stops.
-  useEffect(() => {
-    targetScroll.current = window.scrollY;
-    let last = window.scrollY;
-    setSmoothedScroll(window.scrollY);
-
-    const onScroll = () => {
-      targetScroll.current = window.scrollY;
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-
-    let rafId;
-    const tick = () => {
-      const t = targetScroll.current;
-      const next = last + (t - last) * 0.18;
-      // Only commit state when we've actually moved — avoids re-rendering
-      // on every frame while the page is idle.
-      if (Math.abs(t - next) < 0.15) {
-        if (last !== t) {
-          setSmoothedScroll(t);
-          last = t;
-        }
-      } else {
-        setSmoothedScroll(next);
-        last = next;
-      }
-      rafId = requestAnimationFrame(tick);
-    };
-    rafId = requestAnimationFrame(tick);
-
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      cancelAnimationFrame(rafId);
-    };
-  }, []);
-
-  // For each row, compute a translateX that wraps in [−half, 0].
-  // LTR rows: dx − half  (negative → 0, snaps back to −half = seamless)
-  // RTL rows:    −dx     (0 → −half, snaps back to 0)
-  const offsetFor = (idx) => {
-    const half = halfWidths[idx] || 1500;
-    const raw = smoothedScroll * SCROLL_SPEED;
-    const dx = ((raw % half) + half) % half;
-    const ltr = idx % 2 === 0;
-    return ltr ? dx - half : -dx;
-  };
-
   return (
     <div className="logos">
       <div className="logos-label">
@@ -410,11 +332,8 @@ function BrandsMarquee({ logos }) {
       <div className="logos-marquee">
         {rows.map((row, idx) => (
           <div className="logos-row" key={idx}>
-            <div
-              ref={(el) => { trackRefs.current[idx] = el; }}
-              className="logos-track"
-              style={{ transform: `translate3d(${offsetFor(idx)}px, 0, 0)` }}
-            >
+            {/* Duplicated 2× so the CSS keyframe loops seamlessly at −50%. */}
+            <div className="logos-track">
               {[...row, ...row].map((l, i) => (
                 <div key={`${idx}-${i}`} className="logo-cell">{l}</div>
               ))}

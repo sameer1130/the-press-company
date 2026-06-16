@@ -195,6 +195,16 @@ export default function InteractiveCubes() {
   const cubeSize = 100;
   const ch = cubeSize / 2;
 
+  // The brand monogram, tinted to ink so it reads on the accent-coloured
+  // faces — same masked mark used in the header/footer logo.
+  const cubeLogoStyle = (size) => ({
+    width: size,
+    height: size,
+    backgroundColor: 'var(--ink)',
+    WebkitMask: "url('/logo-mask.png') center / contain no-repeat",
+    mask: "url('/logo-mask.png') center / contain no-repeat",
+  });
+
   // Central cube — single color (accent) with face-tint overlays for
   // light/shade depth. Text colour stays var(--ink) so all faces feel
   // like one carved block.
@@ -313,11 +323,11 @@ export default function InteractiveCubes() {
               transformStyle: 'preserve-3d',
             }}
           >
-            <div style={{ ...centralFace('front',  { transform: `translateZ(${ch}px)`,                  fontSize: 24 }) }}>{'{ P }'}</div>
+            <div style={{ ...centralFace('front',  { transform: `translateZ(${ch}px)` }) }}><div aria-hidden="true" style={cubeLogoStyle(58)} /></div>
             <div style={{ ...centralFace('back',   { transform: `rotateY(180deg) translateZ(${ch}px)`, fontSize: 12, fontFamily: 'var(--font-mono)', fontWeight: 500, letterSpacing: '0.18em' }) }}>EST. 2024</div>
             <div style={{ ...centralFace('right',  { transform: `rotateY(90deg) translateZ(${ch}px)`,  fontSize: 18 }) }}>PRESS</div>
             <div style={{ ...centralFace('left',   { transform: `rotateY(-90deg) translateZ(${ch}px)`, fontSize: 18 }) }}>CO.</div>
-            <div style={{ ...centralFace('top',    { transform: `rotateX(90deg) translateZ(${ch}px)`,  fontSize: 28 }) }}>P</div>
+            <div style={{ ...centralFace('top',    { transform: `rotateX(90deg) translateZ(${ch}px)` }) }}><div aria-hidden="true" style={cubeLogoStyle(54)} /></div>
             <div style={{ ...centralFace('bottom', { transform: `rotateX(-90deg) translateZ(${ch}px)`, fontSize: 10, fontFamily: 'var(--font-mono)', letterSpacing: '0.2em', fontWeight: 400 }) }}>BOMBAY</div>
           </div>
         </div>

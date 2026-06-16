@@ -296,10 +296,11 @@ body.locked { overflow: hidden; height: 100vh; }
   width: 48px; height: 48px;
   position: relative;
   flex-shrink: 0;
-  background-image: url('/logo.png');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
+  /* Transparent silhouette tinted to the theme foreground, so the mark reads
+     correctly on the dark header in every palette (no baked-in cream box). */
+  background-color: var(--paper);
+  -webkit-mask: url('/logo-mask.png') center / contain no-repeat;
+          mask: url('/logo-mask.png') center / contain no-repeat;
 }
 .logo-mark-circle { display: none; }
 
@@ -1232,10 +1233,10 @@ body.locked { overflow: hidden; height: 100vh; }
 }
 .logos-label .dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; }
 /* ── Brands-in-orbit marquee ───────────────────────────────────
-   4 rows of brand chips. Direction alternates per row. Translation
-   is JS-driven from window.scrollY (see BrandsMarquee in Projects.jsx)
-   so motion happens ONLY while the page is scrolling — not on its own.
-   Each row's track is duplicated 2× so wrapping is seamless. */
+   4 rows of brand chips. Direction alternates per row. Motion is a
+   continuous CSS animation that runs on its own (no scroll input).
+   Each row's track is duplicated 2×, so translating by 50% of the
+   track's own width loops seamlessly. */
 .logos-marquee {
   display: flex;
   flex-direction: column;
@@ -1265,6 +1266,27 @@ body.locked { overflow: hidden; height: 100vh; }
   gap: 26px;
   width: max-content;
   will-change: transform;
+  animation: marquee-rtl 42s linear infinite;
+}
+/* Rows 1 & 3 drift left→right, rows 2 & 4 right→left; staggered speeds feel organic. */
+.logos-row:nth-child(odd) .logos-track { animation-name: marquee-ltr; }
+.logos-row:nth-child(1) .logos-track { animation-duration: 46s; }
+.logos-row:nth-child(2) .logos-track { animation-duration: 38s; }
+.logos-row:nth-child(3) .logos-track { animation-duration: 54s; }
+.logos-row:nth-child(4) .logos-track { animation-duration: 34s; }
+/* Pause the row under the cursor so a brand name can be read. */
+.logos-row:hover .logos-track { animation-play-state: paused; }
+
+@keyframes marquee-rtl {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+@keyframes marquee-ltr {
+  from { transform: translate3d(-50%, 0, 0); }
+  to   { transform: translate3d(0, 0, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .logos-track { animation: none; transform: none; }
 }
 
 .logo-cell {
@@ -1518,10 +1540,10 @@ body.locked { overflow: hidden; height: 100vh; }
 .footer-brand-mark {
   width: clamp(150px, 18vw, 240px);
   height: clamp(150px, 18vw, 240px);
-  background-image: url('/logo.png');
-  background-repeat: no-repeat;
-  background-position: left center;
-  background-size: contain;
+  /* Same masked, theme-tinted treatment as the header logo. */
+  background-color: var(--paper);
+  -webkit-mask: url('/logo-mask.png') left center / contain no-repeat;
+          mask: url('/logo-mask.png') left center / contain no-repeat;
   margin-bottom: 22px;
 }
 .footer-brand em {
