@@ -89,6 +89,16 @@ export default function HeroCube() {
 
   const h = halfPx;
 
+  // Brand monogram (same masked mark as the header/footer logo), tintable
+  // per face so it reads on either the dark or accent-coloured faces.
+  const logoMark = (size, color) => ({
+    width: size,
+    height: size,
+    backgroundColor: color,
+    WebkitMask: "url('/logo-mask.png') center / contain no-repeat",
+    mask: "url('/logo-mask.png') center / contain no-repeat",
+  });
+
   const faceBase = {
     position: 'absolute',
     width: '100%',
@@ -145,9 +155,7 @@ export default function HeroCube() {
           border: '1px solid rgba(242,238,229,0.15)',
         }}>
           <div style={{ fontFamily: 'var(--font-mono)', fontSize: 'clamp(9px, 1vw, 12px)', letterSpacing: '0.22em', opacity: 0.5, textTransform: 'uppercase' }}>Strategy Studio</div>
-          <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(48px, 8vw, 110px)', letterSpacing: '-0.05em', lineHeight: 0.85 }}>
-            <span style={{ color: 'var(--accent)' }}>{'{'}</span> P <span style={{ color: 'var(--accent)' }}>{'}'}</span>
-          </div>
+          <div aria-hidden="true" style={logoMark('clamp(70px, 11vw, 140px)', 'var(--paper)')} />
           <div style={{ fontFamily: 'var(--font-mono)', fontSize: 'clamp(9px, 1vw, 12px)', letterSpacing: '0.22em', opacity: 0.5, textTransform: 'uppercase' }}>Est. 2024 · Bombay</div>
         </div>
 
@@ -194,7 +202,7 @@ export default function HeroCube() {
           color: 'var(--ink)',
           transform: `rotateX(90deg) translateZ(${h}px)`,
         }}>
-          <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(40px, 7vw, 100px)', letterSpacing: '-0.05em' }}>P</div>
+          <div aria-hidden="true" style={logoMark('clamp(56px, 9vw, 120px)', 'var(--ink)')} />
         </div>
 
         <div style={{
