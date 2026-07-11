@@ -19,7 +19,7 @@ const IMAGES = [
 const GRADIENTS = [
   'linear-gradient(135deg, #FF4A1C 0%, #0B0B0B 100%)',
   'linear-gradient(135deg, #0B0B0B 0%, #4e1e0b 100%)',
-  'linear-gradient(135deg, #C8351A 0%, #F2EEE5 100%)',
+  'linear-gradient(135deg, #C8351A 0%, #F4EFE5 100%)',
   'linear-gradient(135deg, #4e1e0b 0%, #FF4A1C 100%)',
   'linear-gradient(135deg, #0B0B0B 0%, #FF4A1C 100%)',
 ];

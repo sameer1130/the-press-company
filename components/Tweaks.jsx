@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 // Letterhead / Stamp / Foil are derived from the actual logo colors
 // (#F4EFE5 cream + #4E1E0B brown).
 const THEMES = [
-  { id: 'og',         name: 'OG — Ink & Signal', swatches: ['#0B0B0B', '#F2EEE5', '#FF4A1C'] },
+  { id: 'og',         name: 'OG — Ink & Signal', swatches: ['#0B0B0B', '#F4EFE5', '#FF4A1C'] },
   { id: 'letterhead', name: 'Letterhead',        swatches: ['#0B0B0B', '#F4EFE5', '#4E1E0B'] },
   { id: 'stamp',      name: 'Stamp',             swatches: ['#2A1308', '#F4EFE5', '#6B2A12'] },
   { id: 'foil',       name: 'Foil',              swatches: ['#F4EFE5', '#4E1E0B', '#E8C792'] },

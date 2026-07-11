@@ -1,125 +1,103 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { getCase } from '@/lib/press-data';
 
-// Field guides — the studio's published thinking. Each card flips on hover
-// to reveal the essay's framing (why it works + the angle), so a founder can
-// self-qualify before they ever click into the full piece.
-const PROJECTS = [
-  {
-    client: 'Field guide № 01',
-    sector: 'Branding · Strategy',
-    title: 'The difference between branding and marketing — and why most businesses confuse them.',
-    year: '2025',
-    why: 'One of the most searched and misunderstood topics in the studio briefing room.',
-    seo: '"branding vs marketing" · "difference between branding and marketing"',
-    angle: 'Branding builds perception. Marketing drives visibility and conversions. The two are not interchangeable, and treating them as such is what makes most growth flatten.',
-  },
-  {
-    client: 'Field guide № 02',
-    sector: 'D2C · Growth',
-    title: 'Why most D2C brands fail after initial growth.',
-    year: '2025',
-    why: 'Founder-focused and psychologically compelling — speaks to a quiet fear most operators hold.',
-    angle: 'Five failure modes show up again and again:',
-    points: [
-      'Overdependence on ads',
-      'No brand recall',
-      'Weak retention',
-      'Lack of positioning',
-      'Commodity trap',
-    ],
-    note: 'Positions us as a strategic consultant, not just a marketing vendor.',
-  },
-  {
-    client: 'Field guide № 03',
-    sector: 'Brand equity',
-    title: 'How to build a brand people remember.',
-    year: '2025',
-    why: 'Evergreen branding education — the piece a marketing lead forwards to their CEO.',
-    angle: 'The six layers we work through with founders:',
-    points: [
-      'Brand identity',
-      'Emotional association',
-      'Visual consistency',
-      'Tone of voice',
-      'Positioning',
-      'Repetition psychology',
-    ],
-  },
-  {
-    client: 'Field guide № 04',
-    sector: 'Consumer psychology',
-    title: 'The psychology behind why people buy brands.',
-    year: '2025',
-    why: 'Premium positioning + consumer behavior — highly engaging combination for senior readers.',
-    angle: 'Six drivers behind every buying decision worth pricing for:',
-    points: [
-      'Status',
-      'Trust',
-      'Familiarity bias',
-      'Social proof',
-      'Emotional buying',
-      'Identity signaling',
-    ],
-  },
-  {
-    client: 'Field guide № 05',
-    sector: 'Growth · Performance',
-    title: 'Performance vs brand marketing: what actually grows a business.',
-    year: '2025',
-    why: 'Very strong SEO + founder interest — the question every Series-A operator is asking.',
-    angle: 'Short-term performance buys you growth. Long-term brand buys you equity. This piece is how we tell startups when to spend on which.',
-  },
-  {
-    client: 'Field guide № 06',
-    sector: 'Channel · Narrative',
-    title: 'Why social media alone cannot build a strong brand.',
-    year: '2025',
-    why: 'Contrarian read — highly shareable, especially with senior marketers tired of "post more" advice.',
-    angle: 'Five missing pieces when social is the whole strategy:',
-    points: [
-      'Weak positioning',
-      'No ecosystem',
-      'Lack of community',
-      'Missing retention systems',
-      'No narrative',
-    ],
-  },
+// Section 04 — WORK. A horizontal deck of wide flip cards. The front is a
+// studio idea (a headline we publish on); hovering flips it to the client
+// engagement that proves that idea, with a link into the full case study.
+// Desktop: the section pins and the deck slides across as you scroll.
+// Mobile: a native swipeable carousel (tap a card to open its case).
+
+// Each idea maps to the case that best demonstrates it (via `slug`).
+const FEATURED = [
+  { n: '01', category: 'Branding · Strategy', headline: 'The Difference Between Branding and Marketing (And Why Most Businesses Confuse Them)', slug: 'throve' },
+  { n: '02', category: 'D2C · Growth', headline: 'Why Most D2C Brands Fail After Initial Growth', slug: 'daigo' },
+  { n: '03', category: 'Brand Equity', headline: 'How to Build a Brand People Remember', slug: 'alignllife' },
+  { n: '04', category: 'Consumer Psychology', headline: 'The Psychology Behind Why People Buy Brands', slug: 'janvi-chitalia' },
+  { n: '05', category: 'Growth · Performance', headline: 'Performance Marketing vs Brand Marketing: What Actually Grows a Business?', slug: 'belief-salon' },
+  { n: '06', category: 'Channel · Narrative', headline: 'Why Social Media Alone Cannot Build a Strong Brand', slug: 'furry-essentials' },
 ];
+
+const TOTAL = String(FEATURED.length).padStart(2, '0');
 
 const LOGOS = [
-  'Furry Essentials',
-  'Alignllife',
-  'House of Emporia',
-  'Wise Wag',
-  'Belief Salon',
-  'Prysm Dental',
-  'Throve',
-  'Unique Creation',
-  'Forever Smiles',
-  'Janvi Chitalia',
-  'Dental Window',
-  'Furry Friends & Co.',
-  'Pratap Steels',
-  'Flamemate',
-  'Irest',
-  'Daigo',
-  'Trikaaya Care',
-  'Ornul',
-  'Aura Environmental',
-  'Safety Equipment Co-op',
-  'Jewelure',
-  'Creatio',
-  'Nutriesaviour',
-  'Oxylife',
-  'Rare Earth Cafe',
-  'Physic by Vinay',
-  'Name Place Animal Thing',
+  'Furry Essentials', 'Alignllife', 'House of Emporia', 'Wise Wag',
+  'Belief Salon', 'Prysm Dental', 'Throve', 'Unique Creation',
+  'Forever Smiles', 'Janvi Chitalia', 'Dental Window', 'Furry Friends & Co.',
+  'Pratap Steels', 'Flamemate', 'Irest', 'Daigo',
+  'Trikaaya Care', 'Ornul', 'Aura Environmental', 'Safety Equipment Co-op',
+  'Jewelure', 'Creatio', 'Nutriesaviour', 'Oxylife',
+  'Rare Earth Cafe', 'Physic by Vinay', 'Name Place Animal Thing',
 ];
 
+function ProofCard({ item, width }) {
+  const c = getCase(item.slug);
+  return (
+    <a
+      href={`/work/${item.slug}`}
+      className="proof-card"
+      style={{ width }}
+      aria-label={`${item.headline} — read the ${c.client} case study`}
+    >
+      <div className="proof-flipper">
+        {/* FRONT — the studio idea */}
+        <div className="proof-face proof-front">
+          <div className="proof-tags">
+            <span>{item.n} / {TOTAL}</span>
+            <span>{item.category}</span>
+          </div>
+          <div className="proof-front-bottom">
+            <div className="proof-headline">{item.headline}</div>
+            <div className="proof-foot">
+              <span>Read the case →</span>
+              <span>— 2025</span>
+            </div>
+          </div>
+        </div>
+
+        {/* BACK — the client engagement that proves it */}
+        <div className="proof-face proof-back">
+          <div className="proof-tags">
+            <span>{item.n} / {TOTAL}</span>
+            <span>{c.industry}</span>
+          </div>
+          <div className="proof-back-bottom">
+            <div className="proof-back-eyebrow">The proof</div>
+            <div className="proof-back-client">{c.client}</div>
+            <div className="proof-back-sub">{c.result}</div>
+            <span className="proof-readmore">
+              Read more <span aria-hidden="true">→</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </a>
+  );
+}
+
+function SectionHead() {
+  return (
+    <div className="section-head">
+      <div className="section-num">
+        <div className="dot" />
+        <div>SECTION 04</div>
+        <div>— WORK</div>
+      </div>
+      <div>
+        <h2 className="section-title">
+          Selected <em>proofs.</em>
+        </h2>
+        <div className="work-intro">
+          The ideas we publish on — and the client behind each one. Hover a
+          headline to see the proof; the rest lives under NDA.
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Projects() {
-  const sectionRef = useRef(null);
   const triggerRef = useRef(null);
   const [progress, setProgress] = useState(0);
   const [vw, setVw] = useState(1920);
@@ -146,17 +124,36 @@ export default function Projects() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const cardWidth = 540;
-  const gap = 24;
-  const totalTrackWidth = PROJECTS.length * (cardWidth + gap) - gap;
-  const maxTranslate = Math.max(0, totalTrackWidth - vw + 80);
+  const isMobile = vw < 760;
+
+  // ── Mobile — native swipe carousel ─────────────────────────────
+  if (isMobile) {
+    const cardWidth = Math.min(vw - 48, 420);
+    return (
+      <section className="projects" id="projects">
+        <div style={{ padding: '72px 20px 0' }}>
+          <SectionHead />
+        </div>
+        <div className="work-scroller">
+          {FEATURED.map((item) => (
+            <ProofCard key={item.slug} item={item} width={cardWidth} />
+          ))}
+        </div>
+        <BrandsMarquee logos={LOGOS} />
+      </section>
+    );
+  }
+
+  // ── Desktop — pinned, scroll-driven deck ───────────────────────
+  const cardWidth = Math.min(640, Math.max(460, vw - 300));
+  const gap = 28;
+  const totalTrackWidth = FEATURED.length * (cardWidth + gap) - gap;
+  const maxTranslate = Math.max(0, totalTrackWidth - vw + 32 + 96);
   const translateX = -progress * maxTranslate;
-  // Trigger tall enough that progress 0→1 covers the full horizontal travel
-  // at roughly 1:1 scroll feel, plus a short "hold" at the end before release.
   const triggerHeight = vh + maxTranslate + 200;
 
   return (
-    <section ref={sectionRef} className="projects" id="projects" style={{ overflow: 'visible' }}>
+    <section className="projects" id="projects" style={{ overflow: 'visible' }}>
       <div ref={triggerRef} style={{ height: triggerHeight, position: 'relative' }}>
         <div style={{
           position: 'sticky',
@@ -166,24 +163,8 @@ export default function Projects() {
           display: 'flex',
           flexDirection: 'column',
         }}>
-          <div style={{ padding: '60px 32px 0' }}>
-            <div className="section-head">
-              <div className="section-num">
-                <div className="dot" />
-                <div>SECTION 04</div>
-                <div>— WORK</div>
-              </div>
-              <div>
-                <h2 className="section-title">
-                  Selected <em>proofs.</em>
-                </h2>
-                <div style={{ maxWidth: 560, fontSize: 15, lineHeight: 1.5, opacity: 0.7, marginTop: 20 }}>
-                  Field guides from the studio — the position papers behind
-                  the work. Read them if you recognise the problem; talk to us
-                  if you want to fix it.
-                </div>
-              </div>
-            </div>
+          <div style={{ padding: 'clamp(36px, 5vh, 68px) 32px 0' }}>
+            <SectionHead />
           </div>
 
           <div style={{
@@ -198,97 +179,18 @@ export default function Projects() {
                 display: 'flex',
                 gap,
                 paddingLeft: 32,
-                paddingRight: 80,
-                transform: `translateX(${translateX}px)`,
+                paddingRight: 96,
+                transform: `translate3d(${translateX}px, 0, 0)`,
                 willChange: 'transform',
               }}
             >
-              {PROJECTS.map((p, i) => (
-                <div key={i} className="proj-card" style={{ width: cardWidth, flexShrink: 0 }}>
-                  <div className="proj-flipper">
-                    {/* FRONT — the teaser */}
-                    <div className="proj-face proj-face-front">
-                      <div className="placeholder-swatch" />
-                      <div className="proj-card-inner">
-                        <div className="tag-row">
-                          <span>{String(i + 1).padStart(2, '0')} / {String(PROJECTS.length).padStart(2, '0')}</span>
-                          <span>{p.sector}</span>
-                        </div>
-                        <div>
-                          <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', opacity: 0.8, marginBottom: 10 }}>
-                            — {p.client}
-                          </div>
-                          <div className="project-title">{p.title}</div>
-                        </div>
-                        <div className="project-meta">
-                          <span>Hover to read →</span>
-                          <span>— {p.year}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* BACK — the essay framing */}
-                    <div className="proj-face proj-face-back">
-                      <div className="proj-back-inner">
-                        <div className="tag-row">
-                          <span>{String(i + 1).padStart(2, '0')} / {String(PROJECTS.length).padStart(2, '0')}</span>
-                          <span>{p.sector}</span>
-                        </div>
-
-                        <div className="proj-back-body">
-                          <div className="proj-back-block">
-                            <div className="proj-back-label">Why it works</div>
-                            <div className="proj-back-text">{p.why}</div>
-                          </div>
-
-                          {p.seo && (
-                            <div className="proj-back-block">
-                              <div className="proj-back-label">SEO potential</div>
-                              <div className="proj-back-text proj-back-mono">{p.seo}</div>
-                            </div>
-                          )}
-
-                          <div className="proj-back-block">
-                            <div className="proj-back-label">Angle</div>
-                            <div className="proj-back-text">{p.angle}</div>
-                            {p.points && (
-                              <ul className="proj-back-list">
-                                {p.points.map((pt, j) => (
-                                  <li key={j}>{pt}</li>
-                                ))}
-                              </ul>
-                            )}
-                            {p.note && (
-                              <div className="proj-back-note">{p.note}</div>
-                            )}
-                          </div>
-                        </div>
-
-                        <div className="project-meta">
-                          <span>Read full essay →</span>
-                          <span>— {p.year}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              {FEATURED.map((item) => (
+                <ProofCard key={item.slug} item={item} width={cardWidth} />
               ))}
             </div>
 
-            <div style={{
-              position: 'absolute',
-              bottom: 30,
-              left: 32,
-              right: 32,
-              height: 2,
-              background: 'var(--rule)',
-            }}>
-              <div style={{
-                height: '100%',
-                width: `${progress * 100}%`,
-                background: 'var(--accent)',
-                transition: 'width 0.05s',
-              }} />
+            <div className="work-progress">
+              <div className="work-progress-bar" style={{ width: `${progress * 100}%` }} />
             </div>
           </div>
         </div>
@@ -308,7 +210,6 @@ export default function Projects() {
 function BrandsMarquee({ logos }) {
   const ROW_COUNT = 4;
 
-  // Split brands into ROW_COUNT roughly-equal slices.
   const rows = (() => {
     const base = Math.floor(logos.length / ROW_COUNT);
     const extra = logos.length % ROW_COUNT;

@@ -19,15 +19,9 @@ export function Header({ onOpenMenu, menuOpen }) {
 
   return (
     <header className="header">
-      <a href="#top" className="logo" aria-label="The Press Company">
-        <div className="logo-mark">
-          <div className="logo-mark-circle" />
-        </div>
-        <div className="lockup lockup-oneline">
-          <span className="press-word">PRESS</span>
-          <span className="press-sep">·</span>
-          <span className="press-est">EST. 2024</span>
-        </div>
+      <a href="#top" className="logo logo-wordmark" aria-label="The Press Company">
+        <span className="wordmark-main">The Press</span>
+        <span className="wordmark-sub">Company.</span>
       </a>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
