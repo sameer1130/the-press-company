@@ -89,6 +89,22 @@ export default function CasePage({ params }) {
           <span className="case-eyebrow">Exhibits</span>
           <span className="case-eyebrow-note">Proof, straight from the engagement</span>
         </div>
+        {c.hero && (
+          <figure className="case-hero">
+            <div className="case-hero-frame">
+              <img
+                src={c.hero.src}
+                alt={`${c.client} — ${c.hero.cap}`}
+                width={c.hero.w}
+                height={c.hero.h}
+              />
+            </div>
+            <figcaption>
+              <span className="case-shot-num">00</span>
+              <span>{c.hero.cap}</span>
+            </figcaption>
+          </figure>
+        )}
         <div className="case-gallery">
           {c.exhibits.map((ex, i) => (
             <figure className="case-shot" key={i}>
