@@ -14,8 +14,14 @@ const PEOPLE = [
 // initials. Drop headshots into /public/team (or /public/partners) and add an
 // entry below. The "Collaborators & Partners" sub-group only renders when this
 // array is non-empty.
+// TODO: PLACEHOLDERS — replace name/role with the real affiliated members and
+// add a `photo: '/team/<file>.jpg'` per person (falls back to initials for now).
 const PARTNERS = [
-  // { name: 'Full Name', role: 'What they do', photo: '/team/filename.jpg' },
+  { name: 'Affiliate A', role: 'Content & Copy' },
+  { name: 'Affiliate B', role: 'Performance Marketing' },
+  { name: 'Affiliate C', role: 'Photography & Film' },
+  { name: 'Affiliate D', role: 'Web & Development' },
+  { name: 'Affiliate E', role: 'PR & Outreach' },
 ];
 
 const STATS = [
