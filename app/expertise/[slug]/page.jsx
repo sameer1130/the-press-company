@@ -80,8 +80,8 @@ export default function ExpertisePage({ params }) {
               <a href={`/work/${c.slug}`} className="xp-proof-card" key={c.slug}>
                 <div className="xp-proof-img">
                   <img
-                    src={c.exhibits[0].src}
-                    alt={`${c.client} — ${c.exhibits[0].cap}`}
+                    src={(c.hero || c.exhibits[0]).src}
+                    alt={`${c.client} — ${(c.hero || c.exhibits[0]).cap}`}
                     loading="lazy"
                   />
                 </div>

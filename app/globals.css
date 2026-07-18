@@ -1927,7 +1927,7 @@ body.locked { overflow: hidden; height: 100vh; }
   color: var(--ink);
 }
 .xp-proof-img {
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
   border: 1px solid var(--rule);
   background: var(--ink);
