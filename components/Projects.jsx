@@ -29,6 +29,7 @@ const LOGOS = [
   'Trikaaya Care', 'Ornul', 'Aura Environmental', 'Safety Equipment Co-op',
   'Jewelure', 'Creatio', 'Nutriesaviour', 'Oxylife',
   'Rare Earth Cafe', 'Physic by Vinay', 'Name Place Animal Thing',
+  'One Essence',
 ];
 
 function ProofCard({ item, width }) {

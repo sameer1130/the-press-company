@@ -25,7 +25,7 @@ export default function PressCubes() {
             Five <em>verticals.</em><br />
             One press.
           </h2>
-          <div className="press-intro" style={{ marginTop: 30, color: 'var(--paper)', opacity: 0.7 }}>
+          <div className="press-intro" style={{ marginTop: 30, color: 'var(--paper-text)', opacity: 0.7 }}>
             Hover a sort to turn the plate; click through for the full vertical —
             every service, and the client proof behind it.
           </div>

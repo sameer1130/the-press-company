@@ -27,7 +27,7 @@ export function Header({ onOpenMenu, menuOpen }) {
       <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
         <div style={{
           fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.2em',
-          color: 'var(--paper)', opacity: 0.7, textTransform: 'uppercase',
+          color: 'var(--paper-text)', opacity: 0.7, textTransform: 'uppercase',
         }}>
           {clock} · MUMBAI
         </div>
@@ -86,7 +86,7 @@ export function SideMenu({ open, onClose }) {
         <div
           className="sidemenu-close cta"
           onClick={onClose}
-          style={{ cursor: 'pointer', background: 'transparent', color: 'var(--paper)', border: '1px solid rgba(242,238,229,0.3)' }}
+          style={{ cursor: 'pointer', background: 'transparent', color: 'var(--paper-text)', border: '1px solid rgba(242,238,229,0.3)' }}
         >
           <span className="cta-dot" />
           <span className="cta-label">Close</span>

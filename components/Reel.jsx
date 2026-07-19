@@ -101,7 +101,7 @@ export default function Reel() {
                 {/* FRONT */}
                 <div style={{
                   ...faceBase,
-                  background: 'var(--ink)', color: 'var(--paper)',
+                  background: 'var(--ink)', color: 'var(--paper-text)',
                   transform: `translateZ(${half}px)`,
                   borderRadius: 6, gap: 6,
                 }}>
@@ -113,7 +113,7 @@ export default function Reel() {
                 {/* RIGHT — preview of video face */}
                 <div style={{
                   ...faceBase,
-                  background: 'var(--ink)', color: 'var(--paper)',
+                  background: 'var(--ink)', color: 'var(--paper-text)',
                   transform: `rotateY(90deg) translateZ(${half}px)`,
                   borderRadius: 6,
                   overflow: 'hidden',
@@ -170,7 +170,7 @@ export default function Reel() {
                 {/* BOTTOM */}
                 <div style={{
                   ...faceBase,
-                  background: 'var(--ink)', color: 'var(--paper)',
+                  background: 'var(--ink)', color: 'var(--paper-text)',
                   transform: `rotateX(-90deg) translateZ(${half}px)`,
                   borderRadius: 6,
                 }}>
@@ -186,7 +186,7 @@ export default function Reel() {
               position: 'absolute',
               inset: 0,
               background: 'var(--ink)',
-              color: 'var(--paper)',
+              color: 'var(--paper-text)',
               opacity: expandEased,
               overflow: 'hidden',
               zIndex: 1,

@@ -149,7 +149,7 @@ export default function HeroCube() {
         <div style={{
           ...faceBase,
           background: 'var(--ink)',
-          color: 'var(--paper)',
+          color: 'var(--paper-text)',
           transform: `rotateY(180deg) translateZ(${h}px)`,
           gap: 8,
           border: '1px solid rgba(242,238,229,0.15)',
@@ -181,7 +181,7 @@ export default function HeroCube() {
         <div style={{
           ...faceBase,
           background: 'var(--ink)',
-          color: 'var(--paper)',
+          color: 'var(--paper-text)',
           transform: `rotateY(-90deg) translateZ(${h}px)`,
           padding: '10%',
           alignItems: 'flex-start',
