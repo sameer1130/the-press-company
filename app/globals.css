@@ -2414,8 +2414,9 @@ body.locked { overflow: hidden; height: 100vh; }
   backface-visibility: hidden;
 }
 /* Front alternates ink / accent across the deck, with a faint press hatch. */
+/* Front carries the cover photo (set inline) with light text over it. */
 .proof-front { background: var(--ink); color: var(--paper-text); }
-.proof-card:nth-child(even) .proof-front { background: var(--accent); color: var(--ink); }
+.proof-card:nth-child(even) .proof-front { background: var(--accent); color: var(--paper-text); }
 .proof-front::before {
   content: '';
   position: absolute;
@@ -2448,6 +2449,7 @@ body.locked { overflow: hidden; height: 100vh; }
   font-size: clamp(23px, 2vw, 33px);
   line-height: 1.05;
   letter-spacing: -0.025em;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.55);
 }
 .proof-foot {
   display: flex;

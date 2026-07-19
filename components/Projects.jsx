@@ -42,8 +42,16 @@ function ProofCard({ item, width }) {
       aria-label={`${item.headline} — read the ${c.client} case study`}
     >
       <div className="proof-flipper">
-        {/* FRONT — the studio idea */}
-        <div className="proof-face proof-front">
+        {/* FRONT — the studio idea, over its cover photo (light overlay) */}
+        <div
+          className="proof-face proof-front"
+          style={{
+            backgroundImage:
+              `linear-gradient(to top, rgba(11,11,11,0.76) 0%, rgba(11,11,11,0.4) 32%, rgba(11,11,11,0.14) 58%, rgba(11,11,11,0.42) 100%), url(${(c.hero || c.exhibits[0]).src})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        >
           <div className="proof-tags">
             <span>{item.n} / {TOTAL}</span>
             <span>{item.category}</span>
