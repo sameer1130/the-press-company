@@ -16,6 +16,10 @@ html[data-theme="og"] {
      kept separate from the Ivory background. */
   --paper-text: #E7E5E5;
   --accent: #FF4A1C;
+  /* Foreground for text/marks that sit ON an --accent background. The Themes
+     switcher (top-left) overrides both --accent and --accent-ink inline so the
+     contrast stays correct for any chosen palette colour, light or dark. */
+  --accent-ink: #0B0B0B;
   --mid: #8A8680;
   --rule: rgba(11, 11, 11, 0.14);
 
@@ -671,7 +675,7 @@ body.locked { overflow: hidden; height: 100vh; }
 /* ---------------------- TICKER -------------------------------- */
 .ticker {
   background: var(--accent);
-  color: var(--ink);
+  color: var(--accent-ink);
   padding: 18px 0;
   overflow: hidden;
   white-space: nowrap;
@@ -818,7 +822,7 @@ body.locked { overflow: hidden; height: 100vh; }
 /* ---------------------- VIDEO / SHOWREEL ---------------------- */
 .reel {
   background: var(--accent);
-  color: var(--ink);
+  color: var(--accent-ink);
   padding: 120px 32px;
   position: relative;
   overflow: hidden;
@@ -909,7 +913,7 @@ body.locked { overflow: hidden; height: 100vh; }
   transition: transform 0.3s;
   cursor: pointer;
 }
-.reel-play:hover { transform: translate(-50%, -50%) scale(1.12); background: var(--accent); color: var(--ink); }
+.reel-play:hover { transform: translate(-50%, -50%) scale(1.12); background: var(--accent); color: var(--accent-ink); }
 .reel-play::after {
   content: '';
   position: absolute;
@@ -1012,7 +1016,7 @@ body.locked { overflow: hidden; height: 100vh; }
 }
 .press-cube-face.top {
   background: var(--accent);
-  color: var(--ink);
+  color: var(--accent-ink);
   transform: rotateX(90deg);
   transform-origin: top;
   /* Full-size face folded below the plate. `inset: 0` + `top: 100%` used to
@@ -1140,7 +1144,7 @@ body.locked { overflow: hidden; height: 100vh; }
 }
 .proj-card:nth-child(even) .proj-face {
   background: var(--accent);
-  color: var(--ink);
+  color: var(--accent-ink);
 }
 .proj-face-back {
   transform: rotateY(180deg);
@@ -1585,7 +1589,7 @@ body.locked { overflow: hidden; height: 100vh; }
   margin-top: 20px;
   align-self: flex-start;
   background: var(--accent);
-  color: var(--ink);
+  color: var(--accent-ink);
   font-family: var(--font-display);
   font-weight: 900;
   font-size: 18px;
@@ -1723,7 +1727,7 @@ body.locked { overflow: hidden; height: 100vh; }
   transition: background 0.2s;
 }
 .theme-chip:hover { background: rgba(242, 238, 229, 0.08); }
-.theme-chip.active { background: var(--accent); color: var(--ink); border-color: var(--accent); }
+.theme-chip.active { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 .theme-chip .swatches {
   display: flex; gap: 3px;
 }
@@ -2064,7 +2068,7 @@ body.locked { overflow: hidden; height: 100vh; }
   border-top: 1px solid var(--rule);
   transition: background 0.3s, color 0.3s;
 }
-.xp-next:hover { background: var(--accent); color: var(--ink); }
+.xp-next:hover { background: var(--accent); color: var(--accent-ink); }
 .xp-next-label {
   font-family: var(--font-mono);
   font-size: 10px;
@@ -2490,7 +2494,7 @@ body.locked { overflow: hidden; height: 100vh; }
   align-items: center;
   gap: 8px;
   background: var(--accent);
-  color: var(--ink);
+  color: var(--accent-ink);
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.14em;
@@ -2529,4 +2533,94 @@ body.locked { overflow: hidden; height: 100vh; }
 }
 @media (prefers-reduced-motion: reduce) {
   .proof-flipper { transition: none; }
+}
+
+/* ── Themes switcher (top-left) ─────────────────────────────────────────
+   Swaps the site accent for a brand-palette colour. Styled on a neutral
+   ink/paper base so it stays readable regardless of the chosen accent. */
+.theme-switch {
+  position: fixed;
+  top: 84px;
+  left: 24px;
+  z-index: 400;
+  font-family: var(--font-mono);
+}
+.theme-switch-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background: var(--ink);
+  color: var(--paper);
+  border: none;
+  border-radius: 100px;
+  padding: 10px 15px;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 8px 24px -10px rgba(0, 0, 0, 0.5);
+}
+.theme-switch-dot {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  flex-shrink: 0;
+}
+.theme-switch-caret { font-size: 9px; opacity: 0.7; }
+.theme-switch-menu {
+  margin-top: 9px;
+  width: 216px;
+  max-height: 66vh;
+  overflow-y: auto;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 16px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 48px -18px rgba(0, 0, 0, 0.45);
+}
+.theme-group { display: flex; flex-direction: column; }
+.theme-group + .theme-group { margin-top: 4px; }
+.theme-group-label {
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0.45;
+  padding: 8px 10px 4px;
+}
+.theme-opt {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-radius: 9px;
+  padding: 9px 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink);
+  cursor: pointer;
+  text-align: left;
+}
+.theme-opt:hover { background: rgba(11, 11, 11, 0.06); }
+.theme-opt.active { background: rgba(11, 11, 11, 0.09); }
+.theme-opt.active .theme-opt-name { font-weight: 600; }
+.theme-opt-swatch {
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  border: 1px solid var(--rule);
+  flex-shrink: 0;
+}
+.theme-opt-name { flex: 1; }
+.theme-opt-hex { font-size: 9px; opacity: 0.4; letter-spacing: 0.06em; }
+@media (max-width: 640px) {
+  .theme-switch { top: 76px; left: 14px; }
+  .theme-switch-menu { width: 196px; }
 }

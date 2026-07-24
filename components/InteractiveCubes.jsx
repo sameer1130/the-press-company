@@ -195,19 +195,20 @@ export default function InteractiveCubes() {
   const cubeSize = 100;
   const ch = cubeSize / 2;
 
-  // The brand monogram, tinted to ink so it reads on the accent-coloured
-  // faces — same masked mark used in the header/footer logo.
+  // The brand monogram, tinted to --accent-ink so it reads on the
+  // accent-coloured faces for any chosen accent — same masked mark used in
+  // the header/footer logo.
   const cubeLogoStyle = (size) => ({
     width: size,
     height: size,
-    backgroundColor: 'var(--ink)',
+    backgroundColor: 'var(--accent-ink)',
     WebkitMask: "url('/logo-mask.png') center / contain no-repeat",
     mask: "url('/logo-mask.png') center / contain no-repeat",
   });
 
   // Central cube — single color (accent) with face-tint overlays for
-  // light/shade depth. Text colour stays var(--ink) so all faces feel
-  // like one carved block.
+  // light/shade depth. Text colour tracks --accent-ink so all faces stay
+  // legible on any chosen accent, light or dark.
   const centralFace = (face, extra = {}) => ({
     position: 'absolute',
     width: cubeSize,
@@ -219,7 +220,7 @@ export default function InteractiveCubes() {
     fontFamily: 'var(--font-display)',
     fontWeight: 900,
     letterSpacing: '-0.03em',
-    color: 'var(--ink)',
+    color: 'var(--accent-ink)',
     ...extra,
   });
 

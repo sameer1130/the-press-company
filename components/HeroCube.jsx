@@ -137,7 +137,7 @@ export default function HeroCube() {
         <div style={{
           ...faceBase,
           background: 'var(--accent)',
-          color: 'var(--ink)',
+          color: 'var(--accent-ink)',
           transform: `translateZ(${h}px)`,
           gap: 12,
         }}>
@@ -199,10 +199,10 @@ export default function HeroCube() {
         <div style={{
           ...faceBase,
           background: 'var(--accent)',
-          color: 'var(--ink)',
+          color: 'var(--accent-ink)',
           transform: `rotateX(90deg) translateZ(${h}px)`,
         }}>
-          <div aria-hidden="true" style={logoMark('clamp(56px, 9vw, 120px)', 'var(--ink)')} />
+          <div aria-hidden="true" style={logoMark('clamp(56px, 9vw, 120px)', 'var(--accent-ink)')} />
         </div>
 
         <div style={{

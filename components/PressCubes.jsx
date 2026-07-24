@@ -48,7 +48,7 @@ export default function PressCubes() {
                 </div>
               </div>
               <div className="press-cube-face top">
-                <div className="meta" style={{ color: 'var(--ink)' }}>
+                <div className="meta" style={{ color: 'var(--accent-ink)' }}>
                   <span>{d.num}</span>
                   <span>— {d.letter}</span>
                 </div>

@@ -12,6 +12,7 @@ import People from './People';
 import InteractiveCubes from './InteractiveCubes';
 import FinalCTA from './FinalCTA';
 import Tweaks from './Tweaks';
+import ThemeSwitcher from './ThemeSwitcher';
 
 export default function App() {
   const [opening, setOpening] = useState(true);
@@ -64,6 +65,7 @@ export default function App() {
       <FinalCTA />
 
       <Tweaks visible={tweaksVisible} />
+      {!opening && <ThemeSwitcher />}
     </>
   );
 }
